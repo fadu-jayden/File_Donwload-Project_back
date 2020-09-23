@@ -1,10 +1,12 @@
 package com.example.jayden.contoller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -12,9 +14,17 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/api")
 public class TestController {
 
-    @GetMapping("/test")
+    @PostMapping("/fileUpload")
     @ResponseBody
-    public String hello() {
-        return LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-    }
+    public String fileUpload(HttpServletRequest request, @RequestParam("targetFile") MultipartFile mFile) {
+        System.out.println("접근");
+        System.out.println(mFile.getOriginalFilename());
+        try{
+            mFile.transferTo(new File("D:/workspace/annes_order/filedownload_project/public/datas/"+mFile.getOriginalFilename()));
+        }catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+            return "0";
+        }
+        return "1";
+    }//fileUpload() end
 }
