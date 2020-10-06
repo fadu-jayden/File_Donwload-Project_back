@@ -23,7 +23,7 @@ public class TestController {
         System.out.println(mFile.getOriginalFilename());
         try{
 //            mFile.transferTo(new File("D:/workspace/annes_order/filedownload_project/public/datas/"+mFile.getOriginalFilename()));
-            mFile.transferTo(new File("C:/Program Files/Apache Software Foundation/Tomcat 8.5/webapps/ROOT/datas/"+mFile.getOriginalFilename()));
+            mFile.transferTo(new File("C:/nginx-1.18.0/html/datas/"+mFile.getOriginalFilename()));
         }catch (IllegalStateException | IOException e) {
             e.printStackTrace();
             return "0";
@@ -34,7 +34,7 @@ public class TestController {
     @GetMapping("/getFiles")
     @ResponseBody
     public List<FileDTO> fileList(){
-        File dir = new File("C:/Program Files/Apache Software Foundation/Tomcat 8.5/webapps/ROOT/datas/");
+        File dir = new File("C:/nginx-1.18.0/html/datas/");
         File files[] = dir.listFiles();
 //        System.out.println("리스트 접근은 했다.");
 
