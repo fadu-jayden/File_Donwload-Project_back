@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -19,7 +18,7 @@ public class TestController {
 
     @PostMapping("/uploadFile")
     @ResponseBody
-    public String fileUpload(HttpServletRequest request, @RequestParam("targetFile") MultipartFile mFile) {
+    public String fileUpload(@RequestParam("targetFile") MultipartFile mFile) {
         System.out.println("접근");
         System.out.println(mFile.getOriginalFilename());
         try{
