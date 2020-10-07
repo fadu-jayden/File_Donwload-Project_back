@@ -59,13 +59,22 @@ public class TestController {
         return fileDTOS;
     }//fileList() end
 
-    @PostMapping(path = "downloadFile")
+    @PostMapping(path = "/downloadFile")
     @ResponseBody
-    public List<ResponseEntity<Resource>> fileDownload(HttpServletResponse response, @RequestParam("checkedFiles") List<String> checkedFiles) throws IOException {
+    public ResponseEntity<Resource> fileDownload(HttpServletResponse response, @RequestParam("checkedFile") String fileName) throws IOException {
         System.out.println("다운로드 접근");
-        List<ResponseEntity<Resource>> list = new ArrayList<>();
 
-        for(String fileName : checkedFiles){
+        Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
+        String contentType = Files.probeContentType(path);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + path.getFileName().toString());
+
+        Resource resource = new InputStreamResource(Files.newInputStream(path));
+        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+
+//        for(String fileName : checkedFiles){
 //            System.out.println(fileName+" 을 다운로드합니다");
 //            String saveFileName = "/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName;
 //
@@ -100,17 +109,6 @@ public class TestController {
 //            } catch (Exception ex) {
 //                throw new RuntimeException("file Load Error");
 //            }
-
-            Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
-            String contentType = Files.probeContentType(path);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, contentType);
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + path.getFileName().toString());
-
-            Resource resource = new InputStreamResource(Files.newInputStream(path));
-            list.add(new ResponseEntity<>(resource, headers, HttpStatus.OK));
-        }
-        return list;
+//        }
     }//fileDownload() end
 }
