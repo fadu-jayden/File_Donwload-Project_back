@@ -78,7 +78,8 @@ public class TestController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +fileName+ "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +fileName+ "\";")
+                .header(HttpHeaders.TRANSFER_ENCODING,"binary")
 //                .header(HttpHeaders.CONTENT_LENGTH,fileLen)
                 .body(resource);
 
