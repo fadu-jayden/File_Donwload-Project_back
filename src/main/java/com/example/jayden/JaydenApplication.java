@@ -19,4 +19,18 @@ public class JaydenApplication extends SpringBootServletInitializer {
         SpringApplication.run(JaydenApplication.class, args);
     }
 
+    @Bean
+    public HttpMessageConverter<String> responseBodyConverter() {
+        return new StringHttpMessageConverter(Charset.forName("UTF-8"));
+    }
+
+    @Bean
+    public Filter characterEncodingFilter() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return characterEncodingFilter;
+    }
+
+
 }
