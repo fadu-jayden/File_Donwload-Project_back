@@ -1,5 +1,7 @@
 package com.example.jayden.dto;
 
+import java.io.File;
+
 public class FileDTO {
     public String fileName;
 
@@ -7,9 +9,5 @@ public class FileDTO {
     public FileDTO(String fileName){
         this.fileName=fileName;
     }
-
-    public void setFileName(String fileName){
-        this.fileName=fileName;
-    }//setFileName() end
 
 }
