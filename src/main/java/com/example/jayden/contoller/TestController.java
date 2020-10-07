@@ -63,7 +63,7 @@ public class TestController {
     @PostMapping(path = "/downloadFile")
     @ResponseBody
     public FileSystemResource fileDownload(HttpServletResponse response, @RequestParam("checkedFile") String fileName) throws IOException {
-        System.out.println("다운로드 접근");
+        System.out.println("다운로드 접근 파일명은 "+fileName+" 입니다");
 
         String saveFileName = "/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName;
         Path source = Paths.get(saveFileName);
