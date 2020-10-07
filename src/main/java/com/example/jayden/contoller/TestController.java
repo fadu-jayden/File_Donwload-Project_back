@@ -71,13 +71,13 @@ public class TestController {
 
         Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
         Resource resource = new InputStreamResource(Files.newInputStream(path));
-        File file = resource.getFile();
-        String fileLen = file.length()+"";
+//        File file = resource.getFile();
+//        String fileLen = file.length()+"";
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .header(HttpHeaders.CONTENT_LENGTH,fileLen)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+//                .header(HttpHeaders.CONTENT_LENGTH,fileLen)
                 .body(resource);
 
 //        방법1
