@@ -4,13 +4,16 @@ import com.example.jayden.dto.FileDTO;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,19 +64,32 @@ public class TestController {
     }//fileList() end
 
     @PostMapping(path = "/downloadFile")
-    @ResponseBody
-    public FileSystemResource fileDownload(HttpServletResponse response, @RequestParam("checkedFile") String fileName) throws IOException {
+    public ResponseEntity<Resource> fileDownload(HttpServletResponse response,
+                                           @RequestParam("checkedFile") String fileName,
+                                           HttpServletRequest request) throws IOException {
         System.out.println("다운로드 접근 파일명은 "+fileName+" 입니다");
 
-        String saveFileName = "/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName;
-        Path source = Paths.get(saveFileName);
-        String contentType = Files.probeContentType(source);
-        System.out.println(contentType+" 의 타입을 가지네요");
+        Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
+        Resource resource = new UrlResource(path.toUri());
+        String contentType = null;
 
-        File file = new File(saveFileName);
-        response.setContentType(contentType);  //예 "application/txt"
-        response.setHeader("Content-Disposition", "attachment; filename="+fileName);
-        return new FileSystemResource(file);
+        try {
+            contentType = request.getServletContext().getMimeType(
+                    resource.getFile().getAbsolutePath()
+            );
+        }
+        catch (IOException ex) {
+            System.out.println("Could not determine file type.");
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + fileName + "\""
+                )
+                .body(resource);
 
 //        방법1
 //        Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
@@ -121,5 +137,17 @@ public class TestController {
 //                throw new RuntimeException("file Load Error");
 //            }
 //        }
+
+//        방법 3
+//        String saveFileName = "/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName;
+//        Path source = Paths.get(saveFileName);
+//        String contentType = Files.probeContentType(source);
+//        System.out.println(contentType+" 의 타입을 가지네요");
+//        File file = new File(saveFileName);
+//        response.setContentType(contentType);  //예 "application/txt"
+//        response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+//        return new FileSystemResource(file);
+
+
     }//fileDownload() end
 }
