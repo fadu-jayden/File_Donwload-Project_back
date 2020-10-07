@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -65,8 +67,8 @@ public class TestController {
 
     @GetMapping(path = "/downloadFile/{fileName}")
     public ResponseEntity<Resource> fileDownload(HttpServletResponse response,
-                                           @PathVariable("fileName") String fileName,
-                                           HttpServletRequest request) throws IOException {
+                                                 @PathVariable("fileName") String fileName,
+                                                 HttpServletRequest request) throws IOException {
         System.out.println("다운로드 접근 파일명은 "+fileName+" 입니다");
 
         Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
@@ -76,7 +78,7 @@ public class TestController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLDecoder.decode(fileName,StandardCharsets.UTF_8.toString()) + "\"")
 //                .header(HttpHeaders.CONTENT_LENGTH,fileLen)
                 .body(resource);
 
