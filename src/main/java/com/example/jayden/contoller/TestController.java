@@ -58,7 +58,7 @@ public class TestController {
     public void fileDownload(HttpServletResponse response, @RequestParam("checkedFiles") List<String> checkedFiles) throws IOException {
         System.out.println("다운로드 접근");
         for(String fileName : checkedFiles){
-
+            System.out.println(fileName+" 을 다운로드합니다");
             String saveFileName = "/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName;
 
             Path source = Paths.get(saveFileName);
