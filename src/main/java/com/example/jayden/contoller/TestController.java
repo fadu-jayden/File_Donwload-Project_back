@@ -63,6 +63,7 @@ public class TestController {
 
             Path source = Paths.get(saveFileName);
             String contentType = Files.probeContentType(source);
+            System.out.println(contentType+" 의 타입을 가지네요");
 
             File file = new File(saveFileName);
             long fileLength = file.length();
