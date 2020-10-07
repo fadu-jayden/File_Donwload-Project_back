@@ -60,10 +60,11 @@ public class TestController {
     }//fileList() end
 
     @PostMapping(path = "downloadFile")
+    @ResponseBody
     public List<ResponseEntity<Resource>> fileDownload(HttpServletResponse response, @RequestParam("checkedFiles") List<String> checkedFiles) throws IOException {
         System.out.println("다운로드 접근");
         List<ResponseEntity<Resource>> list = new ArrayList<>();
-        
+
         for(String fileName : checkedFiles){
 //            System.out.println(fileName+" 을 다운로드합니다");
 //            String saveFileName = "/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName;
