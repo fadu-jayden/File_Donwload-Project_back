@@ -63,32 +63,18 @@ public class TestController {
         return fileDTOS;
     }//fileList() end
 
-    @PostMapping(path = "/downloadFile")
+    @GetMapping(path = "/downloadFile/{fileName}")
     public ResponseEntity<Resource> fileDownload(HttpServletResponse response,
-                                           @RequestParam("checkedFile") String fileName,
+                                           @PathVariable("fileName") String fileName,
                                            HttpServletRequest request) throws IOException {
         System.out.println("다운로드 접근 파일명은 "+fileName+" 입니다");
 
         Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
-        Resource resource = new UrlResource(path.toUri());
-        String contentType = null;
-
-        try {
-            contentType = request.getServletContext().getMimeType(
-                    resource.getFile().getAbsolutePath()
-            );
-        }
-        catch (IOException ex) {
-            System.out.println("Could not determine file type.");
-            contentType = "application/octet-stream";
-        }
+        Resource resource = new InputStreamResource(Files.newInputStream(path));
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(
-                        HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + fileName + "\""
-                )
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .body(resource);
 
 //        방법1
