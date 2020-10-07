@@ -1,6 +1,7 @@
 package com.example.jayden.contoller;
 
 import com.example.jayden.dto.FileDTO;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -61,19 +62,29 @@ public class TestController {
 
     @PostMapping(path = "/downloadFile")
     @ResponseBody
-    public ResponseEntity<Resource> fileDownload(HttpServletResponse response, @RequestParam("checkedFile") String fileName) throws IOException {
+    public FileSystemResource fileDownload(HttpServletResponse response, @RequestParam("checkedFile") String fileName) throws IOException {
         System.out.println("다운로드 접근");
 
-        Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
-        String contentType = Files.probeContentType(path);
+        String saveFileName = "/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName;
+        Path source = Paths.get(saveFileName);
+        String contentType = Files.probeContentType(source);
+        System.out.println(contentType+" 의 타입을 가지네요");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE, contentType);
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + path.getFileName().toString());
+        File file = new File(saveFileName);
+        response.setContentType(contentType);  //예 "application/txt"
+        response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+        return new FileSystemResource(file);
 
-        Resource resource = new InputStreamResource(Files.newInputStream(path));
-        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+//        방법1
+//        Path path = Paths.get("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName);
+//        String contentType = Files.probeContentType(path);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+//        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + path.getFileName().toString());
+//        Resource resource = new InputStreamResource(Files.newInputStream(path));
+//        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 
+//        방법2
 //        for(String fileName : checkedFiles){
 //            System.out.println(fileName+" 을 다운로드합니다");
 //            String saveFileName = "/data/work/servers/tomcat9_ae_fileIO_back/datas/"+fileName;
