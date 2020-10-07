@@ -18,9 +18,9 @@ public class TestController {
 
     @PostMapping("/uploadFile")
     @ResponseBody
-    public String fileUpload(@RequestParam("targetFile") MultipartFile mFile) {
+    public String fileUpload(@RequestParam("targetFile") MultipartFile mFile) throws IOException {
         System.out.println("접근");
-        System.out.println(mFile.getOriginalFilename());
+        System.out.println(mFile.getOriginalFilename() + " 내용은 : " +mFile.getBytes());
         try{
 //            mFile.transferTo(new File("D:/workspace/annes_order/filedownload_project/public/datas/"+mFile.getOriginalFilename()));
             mFile.transferTo(new File("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+mFile.getOriginalFilename()));
