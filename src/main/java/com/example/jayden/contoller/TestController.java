@@ -65,9 +65,9 @@ public class TestController {
         return fileDTOS;
     }//fileList() end
 
-    @GetMapping(path = "/downloadFile/{fileName}")
+    @GetMapping(path = "/downloadFile")
     public ResponseEntity<Resource> fileDownload(HttpServletResponse response,
-                                                 @PathVariable("fileName") String fileName,
+                                                 @RequestParam("fileName") String fileName,
                                                  HttpServletRequest request) throws IOException {
         System.out.println("다운로드 접근 파일명은 "+fileName+" 입니다");
 
@@ -78,7 +78,7 @@ public class TestController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLDecoder.decode(fileName,StandardCharsets.UTF_8.toString()) + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +fileName+ "\"")
 //                .header(HttpHeaders.CONTENT_LENGTH,fileLen)
                 .body(resource);
 
