@@ -26,7 +26,7 @@ public class TestController {
     @ResponseBody
     public String fileUpload(@RequestParam("targetFile") MultipartFile mFile) throws IOException {
         System.out.println("접근");
-        System.out.println(mFile.getOriginalFilename() + " 내용은 : " +mFile.getBytes().toString());
+        System.out.println(mFile.getOriginalFilename());
         try{
 //            mFile.transferTo(new File("D:/workspace/annes_order/filedownload_project/public/datas/"+mFile.getOriginalFilename()));
             mFile.transferTo(new File("/data/work/servers/tomcat9_ae_fileIO_back/datas/"+mFile.getOriginalFilename()));
@@ -55,7 +55,7 @@ public class TestController {
     }//fileList() end
 
     @PostMapping(path = "downloadFile")
-    public void fileDownload(HttpServletResponse response, @RequestParam("checkedFiles") String[] checkedFiles) throws IOException {
+    public void fileDownload(HttpServletResponse response, @RequestParam("checkedFiles") List<String> checkedFiles) throws IOException {
         System.out.println("다운로드 접근");
         for(String fileName : checkedFiles){
 
